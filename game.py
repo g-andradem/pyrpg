@@ -1,67 +1,31 @@
-import pygame
-import sys
-
-from entity import Entity
-from utils import load_image
+import pygame, sys
+from settings import *
+from level import Level
 
 class Game:
     def __init__(self):
         pygame.init()
-        
-        pygame.display.set_caption('Game')
-        self.screen = pygame.display.set_mode((640,480))
-        self.display = pygame.Surface((320, 240))
-    
+        self.screen = pygame.display.set_mode((WIDTH,HEIGHT))
+        pygame.display.set_caption('Rpg')
         self.clock = pygame.time.Clock()
 
-        self.movement = [False, False, False, False]
-
-        self.assets = {
-            'player': load_image('entities/player/player.png')
-        }
-
-        self.player = Entity(self, 'player', (50, 50), (8, 15))
+        self.level = Level()
 
     def run(self):
         while True:
-            self.display.fill((14, 219, 248))
-
-            self.player.update((
-                self.movement[1] - self.movement[0],
-                self.movement[3] - self.movement[2]
-            ))
-            self.player.render(self.display)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_a:
-                        self.movement[0] = True
-                    if event.key == pygame.K_d:
-                        self.movement[1] = True
-                    if event.key == pygame.K_w:
-                        self.movement[2] = True
-                    if event.key == pygame.K_s:
-                        self.movement[3] = True
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:
-                        self.movement[0] = False
-                    if event.key == pygame.K_d:
-                        self.movement[1] = False
-                    if event.key == pygame.K_w:
-                        self.movement[2] = False
-                    if event.key == pygame.K_s:
-                        self.movement[3] = False
 
-            self.screen.blit(
-                pygame.transform.scale(
-                    self.display, self.screen.get_size()
-                    ),
-                    (0, 0)
-            )
+
+            self.screen.fill('black')
+
+            self.level.run()
+
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(FPS)
 
-Game().run()
+if __name__ == '__main__':
+    game = Game()
+    game.run()
