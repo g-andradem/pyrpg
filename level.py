@@ -23,21 +23,21 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'bourdary': import_csv_layout('data/test/map.csv')
+            'boundary': import_csv_layout('data/test/map_FloorBlocks.csv')
         }
 
-        for style, layout in layout.items():
-            for row_index, row in enumerate(WORLD_MAP):
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
-                    x = col_index * TILESIZE
-                    y = row_index * TILESIZE
-                    if style == 'bourdary':
-                        Tile(
-                            (x, y), 
-                            [self.visible_sprites, self.obstacles_sprites], 
-                            'invisible', 
-                            surface = pygame.Surface((TILESIZE, TILESIZE))
-                        )
+                    if col != '-1':
+                        x = col_index * TILESIZE
+                        y = row_index * TILESIZE
+                        if style == 'boundary':
+                            Tile(
+                                (x, y), 
+                                [self.visible_sprites, self.obstacles_sprites], 
+                                'invisible'
+                            )
 
         # 
         #         if col == 'p':
@@ -47,7 +47,7 @@ class Level:
         #         if col == 'x':
         #             Tile((x, y),[self.visible_sprites, self.obstacles_sprites])
         self.player = Player(
-            (400, 300),[self.visible_sprites], self.obstacles_sprites
+            (1600, 1200),[self.visible_sprites], self.obstacles_sprites
         )
                 
     def run(self):
@@ -66,7 +66,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2(self.half_width, self.half_height)
 
         # creating the floor
-        self.floor_surf = pygame.image.load('data/test/chao.png').convert()
+        self.floor_surf = pygame.image.load('data/test/ground.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
     def custom_draw(self, player):
