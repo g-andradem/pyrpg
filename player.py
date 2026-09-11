@@ -66,13 +66,15 @@ class Player(pygame.sprite.Sprite):
                 self.speed = 5
 
             # attack input
-            if keys[pygame.K_SPACE] and not self.attacking:
+            # if keys[pygame.K_SPACE] and not self.attacking:
+            if keys[pygame.K_SPACE]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 print('attack')
 
             # magic input
-            if keys[pygame.K_LCTRL] and not self.attacking:
+            # if keys[pygame.K_LCTRL] and not self.attacking:
+            if keys[pygame.K_LCTRL]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 print('magic')
