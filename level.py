@@ -8,7 +8,8 @@ from settings import *
 from tile import Tile
 from player import Player
 from debug import debug
-from support import import_csv_layout
+from support import import_csv_layout, import_folder
+from random import choice
 
 class Level:
     def __init__(self):
@@ -23,7 +24,13 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'boundary': import_csv_layout('data/test/map_FloorBlocks.csv')
+            'boundary': import_csv_layout('data/test/map_FloorBlocks.csv'),
+            'grass': import_csv_layout('data/test/map_Grass.csv'),
+            'object': import_csv_layout('data/test/map_Objects.csv')
+        }
+        graphics = {
+            'grass': import_folder('data/test/grass'),
+            'objects': import_folder('data/test/objects')
         }
 
         for style, layout in layouts.items():
@@ -35,17 +42,26 @@ class Level:
                         if style == 'boundary':
                             Tile(
                                 (x, y), 
-                                [self.visible_sprites, self.obstacles_sprites], 
+                                [self.obstacles_sprites], 
                                 'invisible'
                             )
+                        if style == 'grass':
+                            random_grass_image = choice(graphics['grass'])
+                            Tile(
+                                (x, y),
+                                [self.visible_sprites, self.obstacles_sprites],
+                                'grass',
+                                random_grass_image
+                            )
+                        if style == 'object':
+                            surf = graphics['objects'][int(col)]
+                            Tile(
+                                (x,y),
+                                [self.visible_sprites, self.obstacles_sprites],
+                                'grass',
+                                surf
+                            )
 
-        # 
-        #         if col == 'p':
-        #             self.player = Player(
-        #                 (x, y),[self.visible_sprites], self.obstacles_sprites
-        #             )
-        #         if col == 'x':
-        #             Tile((x, y),[self.visible_sprites, self.obstacles_sprites])
         self.player = Player(
             (1600, 1200),[self.visible_sprites], self.obstacles_sprites
         )

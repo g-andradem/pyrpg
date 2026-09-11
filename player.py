@@ -4,18 +4,37 @@ from settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load('data/test/player.png').convert_alpha()
+        self.image = pygame.image.load('data/test/player2.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0, -26)
 
+        # graphics setup
+        self.import_player_assets()
+
+        # movement
         self.direction = pygame.math.Vector2()
         self.speed = 5
+        self.attacking = False
+        self.attack_coldown = 400
+        self.attack_time = None
 
         self.obstacle_sprites = obstacle_sprites
+
+    def import_player_assets(self):
+        character_path = 'data/test/player'
+        self.animations = {
+            'up': [], 'down': [], 'left': [], 'right': [],
+            'up_idle': [], 'down_idle': [], 'left_idle': [], 'right_idle': [],
+            'up_attack': [], 'down_attack': [], 'left_attack': [], 'right_attack': [],
+        }
+
+        for animation in self.animations.keys():
+            pass
 
     def input(self):
         keys = pygame.key.get_pressed()
 
+        # movement input
         if keys[pygame.K_w]:
             self.direction.y = -1
         elif keys[pygame.K_s]:
@@ -34,6 +53,15 @@ class Player(pygame.sprite.Sprite):
             self.speed = 10
         else:
             self.speed = 5
+
+        # attack input
+        if keys[pygame.K_SPACE] and not self.attacking:
+            self.attack_time = pygame.time.get_ticks()
+
+        # magic input
+        if keys[pygame.K_LCTRL] and not self.attacking:
+            self.attack_time = pygame.time.get_ticks()
+
 
     def move(self, speed):
         if self.direction.magnitude() != 0:
@@ -65,6 +93,14 @@ class Player(pygame.sprite.Sprite):
         if direction == 'vertical':
             pass
 
+    def cooldowns(self):
+        current_time = pygame.time.get_ticks()
+
+        if self.attacking:
+            if current_time - self.attacking >= self.cooldown:
+                self.attacking = False
+
     def update(self):
         self.input()
+        self.cooldowns()
         self.move(self.speed)
