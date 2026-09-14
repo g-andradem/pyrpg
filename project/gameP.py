@@ -1,6 +1,7 @@
 import pygame, sys
 from settingsP import *
-from levelP import Level
+# from levelP import Level
+from gameMenu import GameMenu
 
 class Game:
     def __init__(self):
@@ -10,7 +11,8 @@ class Game:
         pygame.display.set_caption('Rpg')
         self.clock = pygame.time.Clock()
 
-        self.level = Level()
+        # self.level = Level()
+        self.gameMenu = GameMenu()
 
     def run(self):
         while True:
@@ -21,7 +23,9 @@ class Game:
 
             self.screen.fill('black')
 
-            self.level.run()
+            self.gameMenu.run()
+
+            # self.level.run()
 
             pygame.display.update()
             self.clock.tick(FPS)
